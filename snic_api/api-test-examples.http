@@ -1,0 +1,106 @@
+### Register a new customer user
+POST https://localhost:7154/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "customer@example.com",
+  "username": "customer1",
+  "password": "password123",
+  "role": 0
+}
+
+###
+
+### Register a new admin user
+POST https://localhost:7154/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "username": "admin1",
+  "password": "password123",
+  "role": 1
+}
+
+###
+
+### Login as customer
+POST https://localhost:7154/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "customer1",
+  "password": "password123"
+}
+
+###
+
+### Login as admin
+POST https://localhost:7154/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin1",
+  "password": "password123"
+}
+
+###
+
+### Get user profile (requires authentication)
+GET https://localhost:7154/api/auth/profile
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+###
+
+### Check token status (requires authentication)
+GET https://localhost:7154/api/auth/token-status
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+###
+
+### Access protected data (requires authentication - any role)
+GET https://localhost:7154/api/protected/data
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+###
+
+### Access admin-only data (requires Admin role)
+GET https://localhost:7154/api/protected/admin
+Authorization: Bearer YOUR_ADMIN_JWT_TOKEN_HERE
+
+###
+
+### Access customer-only data (requires Customer role)
+GET https://localhost:7154/api/protected/customer
+Authorization: Bearer YOUR_CUSTOMER_JWT_TOKEN_HERE
+
+###
+
+### Logout (invalidate token) - requires authentication
+POST https://localhost:7154/api/auth/logout
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+###
+
+### Try to access protected data after logout (should fail with 401)
+GET https://localhost:7154/api/protected/data
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+###
+
+### Try to access admin data with customer token (should fail with 403)
+GET https://localhost:7154/api/protected/admin
+Authorization: Bearer YOUR_CUSTOMER_JWT_TOKEN_HERE
+
+###
+
+### Try to access customer data with admin token (should fail with 403)
+GET https://localhost:7154/api/protected/customer
+Authorization: Bearer YOUR_ADMIN_JWT_TOKEN_HERE
+
+###
+
+### Get weather forecast (original endpoint, no auth required)
+GET https://localhost:7154/WeatherForecast
+
+### 

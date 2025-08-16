@@ -1,0 +1,289 @@
+### Medical Insurance API Test Examples
+
+### Prerequisites: Get authentication tokens first
+### Use api-test-examples.http to register users and get JWT tokens
+
+###
+
+### 1. PRODUCTS API TESTS
+
+### Get all products
+GET https://localhost:7154/api/products
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+###
+
+### Get product by ID
+GET https://localhost:7154/api/products/1
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+###
+
+### Create a new product with features (Admin or Customer can create)
+POST https://localhost:7154/api/products
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "name": "Premium Health Insurance",
+  "price": 1500.00,
+  "isActive": true,
+  "createdByUserId": 1,
+  "features": [
+    {
+      "title": "Comprehensive Coverage",
+      "detail": "Covers hospitalization, surgery, and emergency care up to $1,000,000"
+    },
+    {
+      "title": "Prescription Drugs",
+      "detail": "80% coverage for prescription medications with $20 copay"
+    },
+    {
+      "title": "Preventive Care",
+      "detail": "100% coverage for annual checkups, vaccinations, and screenings"
+    }
+  ]
+}
+
+###
+
+### Create another product without features
+POST https://localhost:7154/api/products
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "name": "Basic Health Insurance",
+  "price": 800.00,
+  "isActive": true,
+  "createdByUserId": 1,
+  "features": []
+}
+
+###
+
+### Update a product
+PUT https://localhost:7154/api/products/1
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "name": "Premium Health Insurance - Updated",
+  "price": 1600.00,
+  "isActive": true
+}
+
+###
+
+### Delete a product (Admin only)
+DELETE https://localhost:7154/api/products/2
+Authorization: Bearer YOUR_ADMIN_JWT_TOKEN_HERE
+
+###
+
+### 2. POLICIES API TESTS
+
+### Get all policies
+GET https://localhost:7154/api/policies
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+###
+
+### Get policy by ID
+GET https://localhost:7154/api/policies/1
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+###
+
+### Get policies by product ID
+GET https://localhost:7154/api/policies/by-product/1
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+###
+
+### Get policies by user ID (NEW ENDPOINT)
+GET https://localhost:7154/api/policies/by-user/1
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+###
+
+### Get active policies only
+GET https://localhost:7154/api/policies/active
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+###
+
+### Create a new policy (with UserId)
+POST https://localhost:7154/api/policies
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "policyNumber": "POL-2024-001",
+  "holderName": "John Smith",
+  "startDate": "2024-01-01T00:00:00Z",
+  "endDate": "2024-12-31T23:59:59Z",
+  "premium": 1500.00,
+  "productId": 1,
+  "userId": 1
+}
+
+###
+
+### Create another policy (with different user)
+POST https://localhost:7154/api/policies
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "policyNumber": "POL-2024-002",
+  "holderName": "Jane Doe",
+  "startDate": "2024-02-01T00:00:00Z",
+  "endDate": "2025-01-31T23:59:59Z",
+  "premium": 1400.00,
+  "productId": 1,
+  "userId": 2
+}
+
+###
+
+### Update a policy (with UserId)
+PUT https://localhost:7154/api/policies/1
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "holderName": "John Smith Jr.",
+  "startDate": "2024-01-01T00:00:00Z",
+  "endDate": "2024-12-31T23:59:59Z",
+  "premium": 1550.00,
+  "productId": 1,
+  "userId": 1
+}
+
+###
+
+### Delete a policy (Admin only)
+DELETE https://localhost:7154/api/policies/2
+Authorization: Bearer YOUR_ADMIN_JWT_TOKEN_HERE
+
+###
+
+### 3. ERROR SCENARIOS
+
+### Try to create product with non-existent user
+POST https://localhost:7154/api/products
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "name": "Test Product",
+  "price": 100.00,
+  "isActive": true,
+  "createdByUserId": 999,
+  "features": []
+}
+
+###
+
+### Try to create policy with non-existent product
+POST https://localhost:7154/api/policies
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "policyNumber": "POL-ERROR-001",
+  "holderName": "Test User",
+  "startDate": "2024-01-01T00:00:00Z",
+  "endDate": "2024-12-31T23:59:59Z",
+  "premium": 100.00,
+  "productId": 999,
+  "userId": 1
+}
+
+###
+
+### Try to create policy with non-existent user
+POST https://localhost:7154/api/policies
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "policyNumber": "POL-ERROR-002",
+  "holderName": "Test User",
+  "startDate": "2024-01-01T00:00:00Z",
+  "endDate": "2024-12-31T23:59:59Z",
+  "premium": 100.00,
+  "productId": 1,
+  "userId": 999
+}
+
+###
+
+### Try to create policy with duplicate policy number
+POST https://localhost:7154/api/policies
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "policyNumber": "POL-2024-001",
+  "holderName": "Another User",
+  "startDate": "2024-01-01T00:00:00Z",
+  "endDate": "2024-12-31T23:59:59Z",
+  "premium": 100.00,
+  "productId": 1,
+  "userId": 1
+}
+
+###
+
+### Try to delete product that has policies (should fail)
+DELETE https://localhost:7154/api/products/1
+Authorization: Bearer YOUR_ADMIN_JWT_TOKEN_HERE
+
+###
+
+### Try to access without authentication (should fail with 401)
+GET https://localhost:7154/api/products
+
+###
+
+### Try to delete as customer (should fail with 403)
+DELETE https://localhost:7154/api/products/1
+Authorization: Bearer YOUR_CUSTOMER_JWT_TOKEN_HERE
+
+###
+
+### 4. VALIDATION ERRORS
+
+### Create product with invalid price
+POST https://localhost:7154/api/products
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "name": "Invalid Product",
+  "price": -100.00,
+  "isActive": true,
+  "createdByUserId": 1,
+  "features": []
+}
+
+###
+
+### Create policy with end date before start date
+POST https://localhost:7154/api/policies
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "policyNumber": "POL-INVALID-001",
+  "holderName": "Test User",
+  "startDate": "2024-12-31T00:00:00Z",
+  "endDate": "2024-01-01T23:59:59Z",
+  "premium": 100.00,
+  "productId": 1,
+  "userId": 1
+}
+
+###
