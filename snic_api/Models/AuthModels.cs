@@ -30,6 +30,7 @@ namespace snic_api.Models
 
     public class AuthResponse
     {
+        public string userId { get; set; } = string.Empty;
         public string Token { get; set; } = string.Empty;
         public string Username { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;

@@ -125,6 +125,7 @@ namespace snic_api.Controllers
 
                 var response = new AuthResponse
                 {
+                    userId = user.Id.ToString(),
                     Token = token,
                     Username = user.Username,
                     Email = user.Email,
