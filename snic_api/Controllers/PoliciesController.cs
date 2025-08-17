@@ -7,7 +7,7 @@ namespace snic_api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize] // Require authentication for all policy operations
+    [Authorize] 
     public class PoliciesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
